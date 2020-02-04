@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Self-Prep</title>
+	<link rel="stylesheet" type="text/css" href="/static/css/index.css">
+</head>
+<body>
+{% if data %}
+<div id="mainframe">
+	<div id="m1"></div>
+	<div id="m2"></div>
+	<div id="m3"></div>
+</div>
+{% else %}
+<form method="post" action="/" enctype="multipart/form-data">
+	{% csrf_token %}
+	<div>Email</div>
+	<input type="email" name="email">
+	<br><br>
+	<div>Upload Questions File</div>
+	<input type="file" name="ques_file">
+	<br><br>
+	<div>Upload Co-Relation File</div>
+	<input type="file" name="relation_file">
+	<br><br>
+	<button type="submit">Personalize</button>
+</form>
+{% endif %}
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+<script type="text/javascript">
+	var data = {{ data|safe }}
+	var main_user = "{{ main_user|safe }}"
+	console.log(data);
+
+	$("#m1").html('Processing '+String(data.length)+' Questions...');
+	setTimeout(function(){
+		$("#m1").html('Deploying Simulated Environment with ' + parseInt(parseInt(data.length)/10)+' Examinees...');
+		for(var user in data[0]['response']){
+            $("#m2").append('<p>'+data[0]['response'][user]['user']+'</p>')
+		}
+	}, 1000);
+	setTimeout(function(){
+		$("#m1").empty();
+		$("#m2").empty();
+		$("#m1").html('Question Parameters Decoded!');
+		$("#m2").html('Initializing Personalization Engine');
+	},2000);
+
+	setTimeout(function(){
+		$("#m1").empty();
+		$("#m2").empty();
+		$("#m1").html('Welcome, '+main_user)
+		$("#m2").html('Simulating a Test by Student...');
+		$.ajax({
+		    async: true,
+			crossDomain: true,
+			url: "/userdata/",
+			method: "GET",
+			headers: {
+			    "Content-Type": "application/json",
+			    "cache-control": "no-cache"
+			}
+		}).done(function (response) {
+			console.log(response['batch1'][1])
+		});
+		$("#m3").html();
+	},4000);
+	setTimeout(function(){
+		
+	},6000);
+</script>
+<script type="text/javascript" src="/static/js/index.js"></script>
+</body>
+</html>
